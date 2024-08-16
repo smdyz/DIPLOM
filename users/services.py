@@ -14,12 +14,6 @@ def converter_USD_in_RUB(amount: float) -> int:
 
 
 def create_product_with_price(name: str, currency: str = "usd", unit_amount: int = 0) -> stripe.Price:
-    """
-    Create a product in Stripe.
-    :param unit_amount:
-    :param currency:
-    :param str name: Product name
-    """
     product = stripe.Product.create(name=name)
     price = stripe.Price.create(
         currency=currency,

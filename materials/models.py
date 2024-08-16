@@ -9,7 +9,7 @@ class Category(models.Model):
     name = models.CharField(max_length=50, verbose_name='название_категории')
     description = models.TextField(max_length=50, verbose_name='описание_категории', **NULLABLE)
 
-    # **NULLABLE заменяет null=True, blank=True (разрешает оставлять пустые ячейки)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='автор', default=1)
 
     def __str__(self):
         return f'{self.name}'
@@ -48,15 +48,15 @@ class Product(models.Model):
 
 class SubForProductUpdate(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='пользователь')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='курс')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='продукт')
 
     def __str__(self):
         return f'{self.user} {self.product}'
 
     class Meta:
         unique_together = ('user', 'product')
-        verbose_name = 'подписка на курс'
-        verbose_name_plural = 'подписки на курсы'
+        verbose_name = 'подписка на продукт'
+        verbose_name_plural = 'подписки на продукты'
 
 #
 # class Version(models.Model):

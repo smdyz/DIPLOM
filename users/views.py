@@ -16,7 +16,7 @@ class PaymentsListAPIView(generics.ListAPIView):
     serializer_class = PaymentsSerializer
     queryset = Payments.objects.all()
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ('payment_way', 'paid_course', 'paid_lesson', 'user',)
+    filterset_fields = ('payment_way', 'paid_product', 'user',)
     ordering_fields = ('payment_date',)
     permission_classes = [AllowAny]
 
@@ -29,7 +29,7 @@ class PaymentsCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         payment = serializer.save(user=self.request.user)
-        product = f'{payment.paid_course}' if payment.paid_course else f'{payment.paid_lesson}'
+        product = f'{payment.paid_product}'
         price = create_product_with_price(name=product, unit_amount=payment.amount)
         session_id, payment_link = create_stripe_session(price)
         payment.session_id = session_id
@@ -46,7 +46,7 @@ class UserCreateAPIView(generics.CreateAPIView):
         user.set_password(user.password)
         user.save()
 
-        user_email = serializer.cleaned_data['email']
+        user_email = serializer.save['email']
         send_mail(
             "Подтверждение регистрации",
             "Добро пожаловать! Вы успешно зарегистрированы.",

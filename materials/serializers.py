@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Category, Product
+from .models import Category, Product, SubForProductUpdate
 from .validators import UrlsValidator
 
 
@@ -23,11 +23,19 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
-    def get_product_count(self, instance):
-        if instance.lesson_set.all().last():
-            return instance.lesson_set.all().count()
+    def get_products_count(self, instance):
+        if instance.product_set.all().last():
+            return instance.product_set.all().count()
         return 0
 
     def get_validation_exclusions(self):
         exclusions = super(CategorySerializer, self).get_validation_exclusions()
         return exclusions + ['owner']
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SubForProductUpdate
+        fields = '__all__'
+        validators = [UrlsValidator(field='url')]

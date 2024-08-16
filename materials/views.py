@@ -1,24 +1,15 @@
 from django.shortcuts import get_object_or_404
 from requests import Response
 from rest_framework import viewsets, generics
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 
 from .models import Product, Category, SubForProductUpdate
 from .paginators import MaterialPaginator
+from .permissions import IsOwner, IsModer
 #  from .permissions import IsModer, IsOwner, IsModerOrOwner
-from .serializers import ProductSerializer, CategorySerializer
+from .serializers import ProductSerializer, CategorySerializer, SubscriptionSerializer
 from .forms import UpdateProductForm
 from materials.tasks import sending_mails
-
-
-# from django.contrib.auth.models import Group
-
-# users = User.objects.prefetch_related('groups')
-#
-#
-# def user_in_editors(user):
-#     groups = user.groups.all()
-#     print('Editors' in [group.name for group in groups])
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -30,6 +21,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    # проверять в PostMan
     # def get_permissions(self):
     #     if self.action == 'retrieve':
     #         permission_classes = [IsAdminUser | IsOwner]
@@ -90,10 +82,12 @@ class ProductDeleteAPIView(generics.DestroyAPIView):
     queryset = Product.objects.all()
     # permission_classes = [IsAdminUser | IsOwner]
     permission_classes = [AllowAny]
+    http_method_names = ['delete']
 
 
 class SubscriptionAPIView(generics.CreateAPIView):
     queryset = SubForProductUpdate.objects.all()
+    serializer_class = SubscriptionSerializer
     permission_classes = [AllowAny]
 
     def post(self, *args, **kwargs):
