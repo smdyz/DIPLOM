@@ -3,14 +3,14 @@ from celery import shared_task
 from django.core.mail import send_mail
 
 from config import settings
-from materials.models import Product, SubForCourseUpdate
+from materials.models import Product, SubForProductUpdate
 from users.models import User
 
 
 @shared_task
 def sending_mails(pk):
     product = Product.objects.get(pk=pk)
-    subscribers = SubForCourseUpdate.objects.filter(course=pk)
+    subscribers = SubForProductUpdate.objects.filter(course=pk)
 
     send_mail(
         subject=f'Продукт {product} обновлен',

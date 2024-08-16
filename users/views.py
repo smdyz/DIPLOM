@@ -1,3 +1,6 @@
+from django.contrib.auth.views import LoginView
+from django.core.mail import send_mail
+from django.urls import reverse_lazy
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from rest_framework import generics
@@ -43,8 +46,15 @@ class UserCreateAPIView(generics.CreateAPIView):
         user.set_password(user.password)
         user.save()
 
-
-# class UserRegisterAPIView(generics.)
+        user_email = serializer.cleaned_data['email']
+        send_mail(
+            "Подтверждение регистрации",
+            "Добро пожаловать! Вы успешно зарегистрированы.",
+            "tima.zaplavnyy@ya.ru",
+            [user_email],
+            fail_silently=False,
+        )
+        print(user_email)
 
 
 class UserListAPIView(generics.ListAPIView):
@@ -54,6 +64,7 @@ class UserListAPIView(generics.ListAPIView):
 
 
 class UserRetrieveAPIView(generics.RetrieveAPIView):
+    template_name = 'profile.html'
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated, IsOwner | IsAdminUser | IsStuff]

@@ -34,7 +34,6 @@ class Payments(models.Model):
 
     paid_product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='продукт', **NULLABLE)
 
-
     def __str__(self):
         return f'{self.user} {self.amount}'
 

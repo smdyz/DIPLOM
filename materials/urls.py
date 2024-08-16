@@ -3,19 +3,19 @@ from django.urls import path
 from materials.apps import MaterialsConfig
 from rest_framework.routers import DefaultRouter
 
-from materials.views import CourseViewSet, LessonCreateAPIView, LessonListAPIView, LessonUpdateAPIView, \
-    LessonDeleteAPIView, LessonRetrieveAPIView, SubscriptionAPIView
+from materials.views import CategoryViewSet, ProductCreateAPIView, ProductListAPIView, ProductUpdateAPIView, \
+    ProductDeleteAPIView, ProductRetrieveAPIView, SubscriptionAPIView
 
 app_name = MaterialsConfig.name
 
 router = DefaultRouter()
-router.register(r'course', CourseViewSet, basename='course')
+router.register(r'category', CategoryViewSet, basename='category')
 
 urlpatterns = [
-    path('lesson/create/', LessonCreateAPIView.as_view(), name='lesson-create'),
-    path('lesson/', LessonListAPIView.as_view(), name='lessons-list'),
-    path('lesson/<int:pk>/', LessonRetrieveAPIView.as_view(), name='lesson'),
-    path('lesson/update/<int:pk>/', LessonUpdateAPIView.as_view(), name='lesson-update'),
-    path('lesson/delete/<int:pk>/', LessonDeleteAPIView.as_view(), name='lesson-delete'),
+    path('product/create/', ProductCreateAPIView.as_view(), name='product-create'),
+    path('product/', ProductListAPIView.as_view(), name='products-list'),
+    path('product/<int:pk>/', ProductRetrieveAPIView.as_view(), name='product'),
+    path('product/update/<int:pk>/', ProductUpdateAPIView.as_view(), name='product-update'),
+    path('product/delete/<int:pk>/', ProductDeleteAPIView.as_view(), name='product-delete'),
     path('subscription/', SubscriptionAPIView.as_view(), name='sub'),
 ] + router.urls

@@ -1,7 +1,6 @@
 from django.db import models
 
 from config import settings
-from users.models import User
 
 NULLABLE = {'null': True, 'blank': True}
 
@@ -28,7 +27,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='категория', **NULLABLE)
     cost = models.IntegerField(verbose_name='цена')
 
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name='автор', **NULLABLE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, verbose_name='автор', **NULLABLE)
 
     is_published = models.BooleanField(default=False, verbose_name='опубликовано')
 
@@ -55,7 +54,7 @@ class SubForProductUpdate(models.Model):
         return f'{self.user} {self.product}'
 
     class Meta:
-        unique_together = ('user', 'course')
+        unique_together = ('user', 'product')
         verbose_name = 'подписка на курс'
         verbose_name_plural = 'подписки на курсы'
 
